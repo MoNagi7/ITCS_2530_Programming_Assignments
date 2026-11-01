@@ -8,13 +8,14 @@ using namespace std;
 
 int main()
 {
-    double  soccerHours;
+    double soccerHours;
     int volleyballHours;
     int daysPlayed;
-    double  totalHours;
+    double totalHours;
     string playerName;
+    int menuChoice;
 
-    // Ask the user three questions about sports.
+    // Ask the user questions about sports.
     cout << "Welcome to My Sports Program!\n\n";
 
     cout << "What is your full name? ";
@@ -26,7 +27,7 @@ int main()
     // Check if the soccer hours are valid.
     if (cin.fail() || soccerHours < 0)
     {
-        cout << "Invalid soccer hours. Please enter a positive number.\n";
+        cout << "Invalid soccer hours. Please enter a non-negative number.\n";
         return 1;
     }
 
@@ -53,30 +54,84 @@ int main()
     // Calculate the total hours spent playing sports.
     totalHours = soccerHours + volleyballHours;
 
-    // Display the information entered by the user.
-    cout << "\nMy Sports Summary\n";
-    cout << "\n";
+    // Display the sports menu.
+    cout << "\nSports Menu\n";
+    cout << "1. View Sports Summary\n";
+    cout << "2. Compare Soccer and Volleyball Hours\n";
+    cout << "3. Check Weekly Activity Level\n";
 
-    cout << "Player: " << playerName << "\n\n";
+    cout << "Enter your choice (1-3): ";
+    cin >> menuChoice;
 
-    cout << left << setw(25) << "Activity"
-        << right << setw(12) << "Hours/Days" << "\n";
+    // Check if the menu choice is valid.
+    if (cin.fail() || menuChoice < 1 || menuChoice > 3)
+    {
+        cout << "Invalid choice. Please enter 1, 2, or 3.\n";
+        return 1;
+    }
 
-    cout << "-------------------------------------\n";
+    // Check which option the user selected.
+    switch (menuChoice)
+    {
+    case 1:
+        cout << "\nYou selected View Sports Summary.\n";
+        break;
 
-    cout << left << setw(25) << "Soccer Hours"
-        << right << setw(12) << fixed << setprecision(1) << soccerHours << "\n";
+    case 2:
+        cout << "\nYou selected Compare Sports Hours.\n";
 
-    cout << left << setw(25) << "Volleyball Hours"
-        << right << setw(12) << volleyballHours << "\n";
+        // Compare soccer and volleyball hours.
+        if (soccerHours > volleyballHours || soccerHours == volleyballHours)
+        {
+            cout << "You play soccer as much as or more than volleyball.\n";
+        }
+        else
+        {
+            cout << "You play more volleyball than soccer.\n";
+        }
+        break;
 
-    cout << left << setw(25) << "Days Played"
-        << right << setw(12) << daysPlayed << "\n";
+    case 3:
+        cout << "\nYou selected Check Weekly Activity Level.\n";
 
-    cout << left << setw(25) << "Total Hours"
-        << right << setw(12) << totalHours << "\n";
+        // Check the weekly sports activity.
+        if (daysPlayed >= 3 && totalHours >= 5)
+        {
+            cout << "You met your weekly sports activity goal.\n";
+        }
+        else
+        {
+            cout << "You did not meet your weekly sports activity goal.\n";
+        }
+        break;
+    }
 
-    cout << "\nKeep having fun and staying active!\n";
+    // Show the summary if the user selects option 1.
+    if (menuChoice == 1)
+    {
+        // Display the information entered by the user.
+        cout << "\nMy Sports Summary\n";
+        cout << "Player: " << playerName << "\n\n";
+
+        cout << left << setw(25) << "Activity"
+            << right << setw(12) << "Hours/Days" << "\n";
+
+        cout << "-------------------------------------\n";
+
+        cout << left << setw(25) << "Soccer Hours"
+            << right << setw(12) << fixed << setprecision(1) << soccerHours << "\n";
+
+        cout << left << setw(25) << "Volleyball Hours"
+            << right << setw(12) << volleyballHours << "\n";
+
+        cout << left << setw(25) << "Days Played"
+            << right << setw(12) << daysPlayed << "\n";
+
+        cout << left << setw(25) << "Total Hours"
+            << right << setw(12) << totalHours << "\n";
+
+        cout << "\nKeep having fun and staying active!\n";
+    }
 
     // Save the sports summary to a text file.
     ofstream reportFile("report.txt");
