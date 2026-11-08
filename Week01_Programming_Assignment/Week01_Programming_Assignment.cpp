@@ -54,84 +54,119 @@ int main()
     // Calculate the total hours spent playing sports.
     totalHours = soccerHours + volleyballHours;
 
-    // Display the sports menu.
-    cout << "\nSports Menu\n";
-    cout << "1. View Sports Summary\n";
-    cout << "2. Compare Soccer and Volleyball Hours\n";
-    cout << "3. Check Weekly Activity Level\n";
 
-    cout << "Enter your choice (1-3): ";
-    cin >> menuChoice;
-
-    // Check if the menu choice is valid.
-    if (cin.fail() || menuChoice < 1 || menuChoice > 3)
+    // Repeat the menu until the user chooses Exit.
+    do
     {
-        cout << "Invalid choice. Please enter 1, 2, or 3.\n";
-        return 1;
-    }
 
-    // Check which option the user selected.
-    switch (menuChoice)
-    {
-    case 1:
-        cout << "\nYou selected View Sports Summary.\n";
-        break;
 
-    case 2:
-        cout << "\nYou selected Compare Sports Hours.\n";
+        // Display the sports menu.
+        cout << "\nSports Menu\n";
+        cout << "1. View Sports Summary\n";
+        cout << "2. Compare Soccer and Volleyball Hours\n";
+        cout << "3. Check Weekly Activity Level\n";
+        cout << "4. Exit\n";
 
-        // Compare soccer and volleyball hours.
-        if (soccerHours > volleyballHours || soccerHours == volleyballHours)
+
+        cout << "Enter your choice (1-4): ";
+        cin >> menuChoice;
+
+
+        // Keep asking until the user enters a valid choice.
+        while (cin.fail() || menuChoice < 1 || menuChoice > 4)
         {
-            cout << "You play soccer as much as or more than volleyball.\n";
+            cout << "Invalid choice. Please enter 1, 2, 3, or 4.\n";
+
+            if (cin.fail())
+            {
+                cin.clear();
+                cin.ignore(1000, '\n');
+            }
+
+            cout << "Enter your choice (1-4): ";
+            cin >> menuChoice;
         }
-        else
+
+        // Check which option the user selected.
+        switch (menuChoice)
         {
-            cout << "You play more volleyball than soccer.\n";
+        case 1:
+            cout << "\nYou selected View Sports Summary.\n";
+            break;
+
+        case 2:
+            cout << "\nYou selected Compare Sports Hours.\n";
+
+            // Compare soccer and volleyball hours.
+            if (soccerHours > volleyballHours || soccerHours == volleyballHours)
+            {
+                cout << "You play soccer as much as or more than volleyball.\n";
+            }
+            else
+            {
+                cout << "You play more volleyball than soccer.\n";
+            }
+            break;
+
+        case 3:
+            cout << "\nYou selected Check Weekly Activity Level.\n";
+
+            // Check the weekly sports activity.
+            if (daysPlayed >= 3 && totalHours >= 5)
+            {
+                cout << "You met your weekly sports activity goal.\n";
+            }
+            else
+            {
+                cout << "You did not meet your weekly sports activity goal.\n";
+            }
+            break;
+
+
+        case 4:
+            cout << "\nThank you for using My Sports Program!\n";
+            break;
+
         }
-        break;
 
-    case 3:
-        cout << "\nYou selected Check Weekly Activity Level.\n";
-
-        // Check the weekly sports activity.
-        if (daysPlayed >= 3 && totalHours >= 5)
+        // Show the summary if the user selects option 1.
+        if (menuChoice == 1)
         {
-            cout << "You met your weekly sports activity goal.\n";
+            // Display the information entered by the user.
+            cout << "\nMy Sports Summary\n";
+            cout << "Player: " << playerName << "\n\n";
+
+            cout << left << setw(25) << "Activity"
+                << right << setw(12) << "Hours/Days" << "\n";
+
+            cout << "-------------------------------------\n";
+
+            cout << left << setw(25) << "Soccer Hours"
+                << right << setw(12) << fixed << setprecision(1) << soccerHours << "\n";
+
+            cout << left << setw(25) << "Volleyball Hours"
+                << right << setw(12) << volleyballHours << "\n";
+
+            cout << left << setw(25) << "Days Played"
+                << right << setw(12) << daysPlayed << "\n";
+
+            cout << left << setw(25) << "Total Hours"
+                << right << setw(12) << totalHours << "\n";
+
+            cout << "\nKeep having fun and staying active!\n";
+
+            // Show the total sports hours for three weeks.
+            cout << "\nThree-Week Sports Hours Projection\n";
+
+            for (int week = 1; week <= 3; week++)
+            {
+                cout << "Total hours after week " << week
+                    << ": " << totalHours * week << "\n";
+            }
         }
-        else
-        {
-            cout << "You did not meet your weekly sports activity goal.\n";
-        }
-        break;
-    }
 
-    // Show the summary if the user selects option 1.
-    if (menuChoice == 1)
-    {
-        // Display the information entered by the user.
-        cout << "\nMy Sports Summary\n";
-        cout << "Player: " << playerName << "\n\n";
-
-        cout << left << setw(25) << "Activity"
-            << right << setw(12) << "Hours/Days" << "\n";
-
-        cout << "-------------------------------------\n";
-
-        cout << left << setw(25) << "Soccer Hours"
-            << right << setw(12) << fixed << setprecision(1) << soccerHours << "\n";
-
-        cout << left << setw(25) << "Volleyball Hours"
-            << right << setw(12) << volleyballHours << "\n";
-
-        cout << left << setw(25) << "Days Played"
-            << right << setw(12) << daysPlayed << "\n";
-
-        cout << left << setw(25) << "Total Hours"
-            << right << setw(12) << totalHours << "\n";
-
-        cout << "\nKeep having fun and staying active!\n";
-    }
+        // Repeat the sports menu until Exit is selected.
+    } while (menuChoice != 4);
 
     // Save the sports summary to a text file.
     ofstream reportFile("report.txt");
