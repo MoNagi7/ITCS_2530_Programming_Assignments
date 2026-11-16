@@ -7,6 +7,16 @@
 
 using namespace std;
 
+enum ActivityLevel
+{
+	Low,
+	Moderate,
+	High
+};
+
+//Declare Functions
+void displaySoccerSessions(const double sessions[], int size);
+
 // Change the console text color.
 void changeConsoleColor()
 {
@@ -77,10 +87,52 @@ void getDaysPlayed(int& daysPlayed)
     }
 }
 
+// Calculate total soccer hours using array of sessions.
+double calculateSoccerHours(const double sessions[], int size)
+{
+    double total = 0.0;
+
+    for (int i = 0; i < size; i++)
+    {
+        total += sessions[i];
+    }
+    return total;
+}
+
+// Display individual soccer session hours.
+void displaySoccerSessions(const double sessions[], int size)
+{
+    cout << "\nSoccer Practice Sessions\n";
+
+    for (int i = 0; i < size; i++)
+    {
+        cout << "Session " << (i + 1)
+            << ": " << fixed << setprecision(1)
+            << sessions[i] << " hours\n";
+    }
+}
+
 // Calculate the total weekly sports hours.
 double calculateTotalHours(double soccerHours, int volleyballHours)
 {
     return soccerHours + volleyballHours;
+}
+
+// Determine User's weekly sports activity level
+ActivityLevel determineActivityLevel(double totalHours)
+{
+    if (totalHours < 5)
+    {
+        return Low;
+    }
+    else if (totalHours <= 10)
+    {
+        return Moderate;
+    }
+    else
+    {
+        return High;
+    }
 }
 
 // Display the sports menu.
@@ -95,7 +147,8 @@ void displayMenu()
 
 // Show the formatted sports summary.
 void displaySummary(string playerName, double soccerHours,
-    int volleyballHours, int daysPlayed, double totalHours)
+    int volleyballHours, int daysPlayed, double totalHours,
+    const double sessions[], int size)
 {
     cout << "\nMy Sports Summary\n";
     cout << "Player: " << playerName << "\n\n";
@@ -113,6 +166,9 @@ void displaySummary(string playerName, double soccerHours,
     cout << left << setw(25) << "Total Hours"
         << right << setw(12) << totalHours << "\n";
 
+	//Display individual soccer session hours.
+	displaySoccerSessions(sessions, size);
+
     cout << "\nKeep having fun and staying active!\n";
 
     // Show the total sports hours for three weeks.
@@ -126,7 +182,8 @@ void displaySummary(string playerName, double soccerHours,
 
 // Save the same formatted sports summary to a text file.
 void saveReport(string playerName, double soccerHours,
-    int volleyballHours, int daysPlayed, double totalHours)
+    int volleyballHours, int daysPlayed, double totalHours,
+    const double sessions[], int size)
 {
     ofstream reportFile("report.txt");
 
@@ -150,10 +207,41 @@ void saveReport(string playerName, double soccerHours,
         << right << setw(12) << daysPlayed << "\n";
     reportFile << left << setw(25) << "Total Hours"
         << right << setw(12) << totalHours << "\n";
+    // Save inividual soccer sessions
+	reportFile << "\nSoccer Sessions\n";
+
+    for (int i = 0; i < size; i++)
+    {
+        reportFile << "Session " << (i + 1)
+            << ": " << fixed << setprecision(1)
+            << sessions[i] << " hours\n";
+    }
+
     reportFile << "\nKeep having fun and staying active!\n";
 
     reportFile.close();
     cout << "Your sports summary was saved to report.txt.\n";
+}
+
+// Get and validate hours for each soccer session.
+void getSoccerSessions(double sessions[], int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        cout << "Enter the number of hours for soccer session "
+            << (i + 1) << ": ";
+        cin >> sessions[i];
+
+        while (cin.fail() || sessions[i] < 0)
+        {
+            cin.clear();
+            cin.ignore(1000, '\n');
+
+            cout << "Invalid input. Please enter a non-negative number for soccer session "
+                << (i + 1) << ": ";
+            cin >> sessions[i];
+        }
+    }
 }
 
 int main()
@@ -164,6 +252,8 @@ int main()
     double totalHours;
     string playerName;
     int menuChoice;
+    const int max_Sessions = 5;
+	double soccerSessions[max_Sessions] = { 0.0 };
 
     // Change the text color and display the welcome message.
     changeConsoleColor();
@@ -171,11 +261,12 @@ int main()
 
     // Collect and validate the user's information.
     getPlayerName(playerName);
-    getSoccerHours(soccerHours);
+	getSoccerSessions(soccerSessions, max_Sessions);
     getVolleyballHours(volleyballHours);
     getDaysPlayed(daysPlayed);
 
     // Calculate the total hours spent playing sports.
+	soccerHours = calculateSoccerHours(soccerSessions, max_Sessions);
     totalHours = calculateTotalHours(soccerHours, volleyballHours);
 
     // Repeat the menu until the user chooses Exit.
@@ -206,7 +297,7 @@ int main()
         case 1:
             cout << "\nYou selected View Sports Summary.\n";
             displaySummary(playerName, soccerHours, volleyballHours,
-                daysPlayed, totalHours);
+                daysPlayed, totalHours, soccerSessions, max_Sessions);
             break;
 
         case 2:
@@ -223,7 +314,25 @@ int main()
             break;
 
         case 3:
+        {
             cout << "\nYou selected Check Weekly Activity Level.\n";
+
+            ActivityLevel weeklyActivity = determineActivityLevel(totalHours);
+
+            switch (weeklyActivity)
+            {
+            case Low:
+                cout << "Your weekly activity level is LOW.\n";
+                break;
+
+            case Moderate:
+                cout << "Your weekly activity level is MODERATE.\n";
+                break;
+
+            case High:
+                cout << "Your weekly activity level is HIGH.\n";
+                break;
+            }
 
             if (daysPlayed >= 3 && totalHours >= 5)
             {
@@ -233,7 +342,9 @@ int main()
             {
                 cout << "You did not meet your weekly sports activity goal.\n";
             }
+
             break;
+        }
 
         case 4:
             cout << "\nThank you for using My Sports Program!\n";
@@ -243,7 +354,7 @@ int main()
     } while (menuChoice != 4);
 
     // Save the sports summary to a text file.
-    saveReport(playerName, soccerHours, volleyballHours, daysPlayed, totalHours);
+    saveReport(playerName, soccerHours, volleyballHours, daysPlayed, totalHours, soccerSessions, max_Sessions);
 
     return 0;
 }
