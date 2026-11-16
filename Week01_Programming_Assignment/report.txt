@@ -1,11 +1,11 @@
 My Sports Summary
-Player: Moe
+Player: Mohamed Nagi
 
 Activity                   Hours/Days
 -------------------------------------
-Soccer Hours                      2.5
+Soccer Hours                      4.5
 Volleyball Hours                    3
 Days Played                         4
-Total Hours                       5.5
+Total Hours                       7.5
 
 Keep having fun and staying active!
