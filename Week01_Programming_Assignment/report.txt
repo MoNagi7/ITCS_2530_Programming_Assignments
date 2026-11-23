@@ -1,11 +1,18 @@
 My Sports Summary
-Player: Moe
+Player: Test User 1
 
 Activity                   Hours/Days
 -------------------------------------
-Soccer Hours                      2.5
+Soccer Hours                     14.0
 Volleyball Hours                    3
 Days Played                         4
-Total Hours                       5.5
+Total Hours                      17.0
+
+Soccer Sessions
+Session 1: 5.0 hours
+Session 2: 2.5 hours
+Session 3: 3.5 hours
+Session 4: 2.0 hours
+Session 5: 1.0 hours
 
 Keep having fun and staying active!
