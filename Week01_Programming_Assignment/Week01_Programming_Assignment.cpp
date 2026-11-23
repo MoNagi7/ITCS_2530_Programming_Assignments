@@ -14,8 +14,16 @@ enum ActivityLevel
 	High
 };
 
+// Store information about an individual soccer session.
+struct ActivitySession
+{
+	string activityName;
+	double hours;
+    ActivityLevel level;
+};
+
 //Declare Functions
-void displaySoccerSessions(const double sessions[], int size);
+void displaySoccerSessions(const ActivitySession sessions[], int size);
 
 // Change the console text color.
 void changeConsoleColor()
@@ -88,19 +96,20 @@ void getDaysPlayed(int& daysPlayed)
 }
 
 // Calculate total soccer hours using array of sessions.
-double calculateSoccerHours(const double sessions[], int size)
+double calculateSoccerHours(const ActivitySession sessions[], int size)
 {
     double total = 0.0;
 
     for (int i = 0; i < size; i++)
     {
-        total += sessions[i];
+        total += sessions[i].hours;
     }
     return total;
 }
 
 // Display individual soccer session hours.
-void displaySoccerSessions(const double sessions[], int size)
+
+void displaySoccerSessions(const ActivitySession sessions[], int size)
 {
     cout << "\nSoccer Practice Sessions\n";
 
@@ -108,7 +117,25 @@ void displaySoccerSessions(const double sessions[], int size)
     {
         cout << "Session " << (i + 1)
             << ": " << fixed << setprecision(1)
-            << sessions[i] << " hours\n";
+            << sessions[i].hours << " hours"
+            << " | Level: ";
+
+        switch (sessions[i].level)
+        {
+        case Low:
+            cout << "Low";
+            break;
+
+        case Moderate:
+            cout << "Moderate";
+            break;
+
+        case High:
+            cout << "High";
+            break;
+        }
+
+        cout << "\n";
     }
 }
 
@@ -148,7 +175,7 @@ void displayMenu()
 // Show the formatted sports summary.
 void displaySummary(string playerName, double soccerHours,
     int volleyballHours, int daysPlayed, double totalHours,
-    const double sessions[], int size)
+    const ActivitySession sessions[], int size)
 {
     cout << "\nMy Sports Summary\n";
     cout << "Player: " << playerName << "\n\n";
@@ -183,7 +210,7 @@ void displaySummary(string playerName, double soccerHours,
 // Save the same formatted sports summary to a text file.
 void saveReport(string playerName, double soccerHours,
     int volleyballHours, int daysPlayed, double totalHours,
-    const double sessions[], int size)
+    const ActivitySession sessions[], int size)
 {
     ofstream reportFile("report.txt");
 
@@ -214,7 +241,7 @@ void saveReport(string playerName, double soccerHours,
     {
         reportFile << "Session " << (i + 1)
             << ": " << fixed << setprecision(1)
-            << sessions[i] << " hours\n";
+            << sessions[i].hours << " hours\n";
     }
 
     reportFile << "\nKeep having fun and staying active!\n";
@@ -223,23 +250,41 @@ void saveReport(string playerName, double soccerHours,
     cout << "Your sports summary was saved to report.txt.\n";
 }
 
-// Get and validate hours for each soccer session.
-void getSoccerSessions(double sessions[], int size)
+// Get and validate information for each soccer session.
+void getSoccerSessions(ActivitySession sessions[], int size)
 {
     for (int i = 0; i < size; i++)
     {
+        // Identify the activity.
+        sessions[i].activityName = "Soccer";
+
+        // Get and validate session hours.
         cout << "Enter the number of hours for soccer session "
             << (i + 1) << ": ";
-        cin >> sessions[i];
+        cin >> sessions[i].hours;
 
-        while (cin.fail() || sessions[i] < 0)
+        while (cin.fail() || sessions[i].hours < 0)
         {
             cin.clear();
             cin.ignore(1000, '\n');
 
             cout << "Invalid input. Please enter a non-negative number for soccer session "
                 << (i + 1) << ": ";
-            cin >> sessions[i];
+            cin >> sessions[i].hours;
+        }
+
+        // Assign the activity level based on session hours.
+        if (sessions[i].hours < 1)
+        {
+            sessions[i].level = Low;
+        }
+        else if (sessions[i].hours <= 2)
+        {
+            sessions[i].level = Moderate;
+        }
+        else
+        {
+            sessions[i].level = High;
         }
     }
 }
@@ -253,7 +298,7 @@ int main()
     string playerName;
     int menuChoice;
     const int max_Sessions = 5;
-	double soccerSessions[max_Sessions] = { 0.0 };
+    ActivitySession soccerSessions[max_Sessions] = {};
 
     // Change the text color and display the welcome message.
     changeConsoleColor();
